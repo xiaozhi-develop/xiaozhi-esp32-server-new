@@ -25,5 +25,10 @@ public class DeviceUpdateDTO implements Serializable {
     @Size(max = 64)
     private String alias;
 
+    /**
+    * 记忆体ID
+    */
+    private String memoryId;
+
     private static final long serialVersionUID = 1L;
 }

@@ -1262,4 +1262,11 @@ export default {
   'knowledgeFileUpload.content': '内容:',
   'knowledgeFileUpload.testQuestionRequired': '请输入测试问题',
   'knowledgeBaseDialog.descriptionRequired': '请输入知识库描述',
+  // 智能体配置对话框
+  'agentConfig.title': '智能体配置',
+  'agentConfig.selectTemplate': '选择智能体',
+  'agentConfig.agentName': '助手昵称',
+  'agentConfig.systemPrompt': '角色介绍',
+  'agentConfig.advancedConfig': '更详细配置',
+  'device.configAgent': '配置智能体',
 }

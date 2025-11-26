@@ -25,6 +25,27 @@
           }" />
           <span class="nav-text">{{ $t("header.smartManagement") }}</span>
         </div>
+
+        <!-- Device Management (New) -->
+        <div class="equipment-management" :class="{
+          'active-tab': $route.path === '/user-device-list',
+        }" @click="goUserDeviceList">
+          <img loading="lazy" alt="" src="@/assets/header/robot.png" :style="{
+            filter: $route.path === '/user-device-list' ? 'brightness(0) invert(1)' : 'None',
+          }" />
+          <span class="nav-text">{{ $t("device.management") }}</span>
+        </div>
+
+        <!-- Memory Management (New) -->
+        <div class="equipment-management" :class="{
+          'active-tab': $route.path === '/memory-management',
+        }" @click="goMemoryManagement">
+          <img loading="lazy" alt="" src="@/assets/header/robot.png" :style="{
+            filter: $route.path === '/memory-management' ? 'brightness(0) invert(1)' : 'None',
+          }" />
+          <span class="nav-text">记忆体管理</span>
+        </div>
+
         <!-- 普通用户显示音色克隆 -->
         <div v-if="!isSuperAdmin" class="equipment-management"
           :class="{ 'active-tab': $route.path === '/voice-clone-management' }" @click="goVoiceCloneManagement">
@@ -135,7 +156,7 @@
 
       <!-- 右侧元素 -->
       <div class="header-right">
-        <div class="search-container" v-if="$route.path === '/home' && !(isSuperAdmin && isSmallScreen)">
+        <div class="search-container" v-if="($route.path === '/home' || $route.path === '/user-device-list') && !(isSuperAdmin && isSmallScreen)">
           <div class="search-wrapper">
             <el-input v-model="search" :placeholder="$t('header.searchPlaceholder')" class="custom-search-input"
               @keyup.enter.native="handleSearch" @focus="showSearchHistory" @blur="hideSearchHistory" clearable
@@ -301,6 +322,12 @@ export default {
     goHome() {
       // 跳转到首页
       this.$router.push("/home");
+    },
+    goUserDeviceList() {
+      this.$router.push("/user-device-list");
+    },
+    goMemoryManagement() {
+      this.$router.push("/memory-management");
     },
     goUserManagement() {
       this.$router.push("/user-management");

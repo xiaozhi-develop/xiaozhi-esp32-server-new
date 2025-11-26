@@ -140,6 +140,11 @@ public class ConfigServiceImpl implements ConfigService {
         String deviceMaxOutputSize = sysParamsService.getValue("device_max_output_size", true);
         result.put("device_max_output_size", deviceMaxOutputSize);
 
+        // 添加 memory_id
+        if (StringUtils.isNotBlank(device.getMemoryId())) {
+            result.put("memory_id", device.getMemoryId());
+        }
+
         // 获取聊天记录配置
         Integer chatHistoryConf = agent.getChatHistoryConf();
         if (agent.getMemModelId() != null && agent.getMemModelId().equals(Constant.MEMORY_NO_MEM)) {

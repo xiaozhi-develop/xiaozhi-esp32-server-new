@@ -21,6 +21,13 @@ public interface DeviceService extends BaseService<DeviceEntity> {
             DeviceReportReqDTO deviceReport);
 
     /**
+     * 获取用户的所有设备
+     * @param userId 用户ID
+     * @return 设备列表
+     */
+    List<DeviceEntity> getUserDevices(Long userId);
+
+    /**
      * 获取用户指定智能体的设备列表，
      */
     List<DeviceEntity> getUserDevices(Long userId, String agentId);

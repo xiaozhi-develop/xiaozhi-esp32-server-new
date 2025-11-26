@@ -102,4 +102,37 @@ export default {
                 });
             }).send();
     },
+    // 获取所有设备列表
+    getAllUserDevices(callback) {
+        RequestService.sendRequest()
+            .url(`${getServiceUrl()}/device/list`)
+            .method('GET')
+            .success((res) => {
+                RequestService.clearRequestTime();
+                callback(res);
+            })
+            .networkFail((err) => {
+                console.error('获取设备列表失败:', err);
+                RequestService.reAjaxFun(() => {
+                    this.getAllUserDevices(callback);
+                });
+            }).send();
+    },
+    // 获取所有设备状态
+    getAllDevicesStatus(callback) {
+        RequestService.sendRequest()
+            .url(`${getServiceUrl()}/device/status`)
+            .method('POST')
+            .data({})
+            .success((res) => {
+                RequestService.clearRequestTime();
+                callback(res);
+            })
+            .networkFail((err) => {
+                console.error('获取设备状态失败:', err);
+                RequestService.reAjaxFun(() => {
+                    this.getAllDevicesStatus(callback);
+                });
+            }).send();
+    },
 }

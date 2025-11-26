@@ -68,7 +68,7 @@
                       />
                     </el-form-item>
 
-                    <el-form-item :label="$t('roleConfig.memoryHis') + '：'">
+                    <!-- <el-form-item :label="$t('roleConfig.memoryHis') + '：'">
                       <el-input
                         type="textarea"
                         rows="6"
@@ -79,7 +79,7 @@
                         class="form-textarea"
                         :disabled="form.model.memModelId !== 'Memory_mem_local_short'"
                       />
-                    </el-form-item>
+                    </el-form-item> -->
                     <el-form-item
                       :label="$t('roleConfig.languageCode') + '：'"
                       style="display: none"
@@ -309,7 +309,7 @@ export default {
         { label: this.$t("roleConfig.llm"), key: "llmModelId", type: "LLM" },
         { label: this.$t("roleConfig.vllm"), key: "vllmModelId", type: "VLLM" },
         { label: this.$t("roleConfig.intent"), key: "intentModelId", type: "Intent" },
-        { label: this.$t("roleConfig.memory"), key: "memModelId", type: "Memory" },
+        // { label: this.$t("roleConfig.memory"), key: "memModelId", type: "Memory" },
         { label: this.$t("roleConfig.tts"), key: "ttsModelId", type: "TTS" },
       ],
       llmModeTypeMap: new Map(),
@@ -437,7 +437,6 @@ export default {
     applyTemplateData(templateData) {
       this.form = {
         ...this.form,
-        agentName: templateData.agentName || this.form.agentName,
         ttsVoiceId: templateData.ttsVoiceId || this.form.ttsVoiceId,
         chatHistoryConf: templateData.chatHistoryConf || this.form.chatHistoryConf,
         systemPrompt: templateData.systemPrompt || this.form.systemPrompt,

@@ -1262,4 +1262,12 @@ export default {
   'knowledgeFileUpload.content': 'Content:',
   'knowledgeFileUpload.testQuestionRequired': 'Please enter test question',
   'knowledgeBaseDialog.descriptionRequired': 'Please enter knowledge base description',
+
+  // Agent Config Dialog
+  'agentConfig.title': 'Agent Configuration',
+  'agentConfig.selectTemplate': 'Select Agent',
+  'agentConfig.agentName': 'Agent Name',
+  'agentConfig.systemPrompt': 'Role Introduction',
+  'agentConfig.advancedConfig': 'Advanced Config',
+  'device.configAgent': 'Configure Agent',
 }

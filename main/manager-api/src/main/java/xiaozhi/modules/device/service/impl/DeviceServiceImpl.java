@@ -15,6 +15,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.aop.framework.AopContext;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -38,6 +39,8 @@ import xiaozhi.common.service.impl.BaseServiceImpl;
 import xiaozhi.common.user.UserDetail;
 import xiaozhi.common.utils.ConvertUtils;
 import xiaozhi.common.utils.DateUtils;
+import xiaozhi.modules.agent.dto.AgentCreateDTO;
+import xiaozhi.modules.agent.service.AgentService;
 import xiaozhi.modules.device.dao.DeviceDao;
 import xiaozhi.modules.device.dto.DeviceManualAddDTO;
 import xiaozhi.modules.device.dto.DevicePageUserDTO;
@@ -62,6 +65,7 @@ public class DeviceServiceImpl extends BaseServiceImpl<DeviceDao, DeviceEntity> 
     private final SysParamsService sysParamsService;
     private final RedisUtils redisUtils;
     private final OtaService otaService;
+    private final ObjectProvider<AgentService> agentServiceProvider;
 
     @Async
     public void updateDeviceConnectionInfo(String agentId, String deviceId, String appVersion) {
@@ -113,6 +117,21 @@ public class DeviceServiceImpl extends BaseServiceImpl<DeviceDao, DeviceEntity> 
         UserDetail user = SecurityUser.getUser();
         if (user.getId() == null) {
             throw new RenException(ErrorCode.USER_NOT_LOGIN);
+        }
+
+        // 如果没有传入agentId，则创建一个专属的Agent
+        if (StringUtils.isBlank(agentId)) {
+            try {
+                AgentCreateDTO createDTO = new AgentCreateDTO();
+                createDTO.setAgentName("我的小智-" + macAddress.substring(macAddress.length() - 4));
+                // 创建Agent并获取ID
+                agentId = agentServiceProvider.getObject().createAgent(createDTO);
+            } catch (Exception e) {
+                log.error("自动创建专属Agent失败", e);
+                // 如果创建失败，可以考虑抛出异常或者让agentId保持为空（取决于是否允许无Agent设备）
+                // 这里选择抛出异常，保证设备一定有Agent
+                throw new RenException("创建设备专属智能体失败");
+            }
         }
 
         Date currentTime = new Date();
@@ -225,6 +244,13 @@ public class DeviceServiceImpl extends BaseServiceImpl<DeviceDao, DeviceEntity> 
         QueryWrapper<DeviceEntity> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", userId);
         wrapper.eq("agent_id", agentId);
+        return baseDao.selectList(wrapper);
+    }
+
+    @Override
+    public List<DeviceEntity> getUserDevices(Long userId) {
+        QueryWrapper<DeviceEntity> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id", userId);
         return baseDao.selectList(wrapper);
     }
 
@@ -459,6 +485,21 @@ public class DeviceServiceImpl extends BaseServiceImpl<DeviceDao, DeviceEntity> 
         if (exist != null) {
             throw new RenException(ErrorCode.MAC_ADDRESS_ALREADY_EXISTS);
         }
+
+        // 如果没有传入agentId，则创建一个专属的Agent
+        if (StringUtils.isBlank(dto.getAgentId())) {
+            try {
+                AgentCreateDTO createDTO = new AgentCreateDTO();
+                createDTO.setAgentName("我的小智-" + dto.getMacAddress().substring(dto.getMacAddress().length() - 4));
+                // 创建Agent并获取ID
+                String newAgentId = agentServiceProvider.getObject().createAgent(createDTO);
+                dto.setAgentId(newAgentId);
+            } catch (Exception e) {
+                log.error("自动创建专属Agent失败", e);
+                throw new RenException("创建设备专属智能体失败");
+            }
+        }
+
         Date now = new Date();
         DeviceEntity entity = new DeviceEntity();
         entity.setId(dto.getMacAddress());

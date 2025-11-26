@@ -61,6 +61,18 @@ const routes = [
       return import('../views/DeviceManagement.vue')
     }
   },
+  // 用户设备列表页面
+  {
+    path: '/user-device-list',
+    name: 'UserDeviceList',
+    component: function () {
+      return import('../views/UserDeviceList.vue')
+    },
+    meta: {
+      requiresAuth: true,
+      title: '我的设备'
+    }
+  },
   // 添加用户管理路由
   {
     path: '/user-management',
@@ -181,6 +193,17 @@ const routes = [
       return import('../views/TemplateQuickConfig.vue')
     }
   },
+  {
+    path: '/memory-management',
+    name: 'MemoryManagement',
+    component: function () {
+      return import('../views/MemoryManagement.vue')
+    },
+    meta: {
+      requiresAuth: true,
+      title: '记忆体管理'
+    }
+  },
 ]
 const router = new VueRouter({
   base: process.env.VUE_APP_PUBLIC_PATH || '/',
@@ -202,7 +225,7 @@ VueRouter.prototype.push = function push(location) {
 }
 
 // 需要登录才能访问的路由
-const protectedRoutes = ['home', 'RoleConfig', 'DeviceManagement', 'UserManagement', 'ModelConfig', 'KnowledgeBaseManagement', 'KnowledgeFileUpload']
+const protectedRoutes = ['home', 'RoleConfig', 'DeviceManagement', 'UserManagement', 'ModelConfig', 'KnowledgeBaseManagement', 'KnowledgeFileUpload', 'MemoryManagement']
 
 // 路由守卫
 router.beforeEach((to, from, next) => {

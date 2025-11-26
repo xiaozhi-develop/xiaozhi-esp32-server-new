@@ -147,6 +147,17 @@ def get_agent_models(
 
 def save_mem_local_short(mac_address: str, short_momery: str) -> Optional[Dict]:
     try:
+        # Check if mac_address is actually a memory_id (UUID)
+        # UUID length is 32 (hex) or 36 (with dashes). Mac address is usually 12 or 17.
+        if len(mac_address) > 20:
+            return ManageApiClient._instance._execute_request(
+                "PUT",
+                f"/memory/content/" + mac_address,
+                json={
+                    "summaryMemory": short_momery,
+                },
+            )
+
         return ManageApiClient._instance._execute_request(
             "PUT",
             f"/agent/saveMemory/" + mac_address,

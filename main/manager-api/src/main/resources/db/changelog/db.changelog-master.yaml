@@ -432,3 +432,10 @@ databaseChangeLog:
         - sqlFile:
             encoding: utf8
             path: classpath:db/changelog/202511261415.sql
+  - changeSet:
+      id: 202512010000
+      author: copilot
+      changes:
+        - sqlFile:
+            encoding: utf8
+            path: classpath:db/changelog/202512010000.sql

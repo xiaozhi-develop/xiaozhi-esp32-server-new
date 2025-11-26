@@ -92,10 +92,19 @@ public class DeviceController {
         return new Result<List<DeviceEntity>>().ok(devices);
     }
 
-    @PostMapping("/bind/{agentId}")
-    @Operation(summary = "设备在线接口")
+    @GetMapping("/list")
+    @Operation(summary = "获取用户所有设备")
     @RequiresPermissions("sys:role:normal")
-    public Result<String> forwardToMqttGateway(@PathVariable String agentId, @RequestBody String requestBody) {
+    public Result<List<DeviceEntity>> getAllUserDevices() {
+        UserDetail user = SecurityUser.getUser();
+        List<DeviceEntity> devices = deviceService.getUserDevices(user.getId());
+        return new Result<List<DeviceEntity>>().ok(devices);
+    }
+
+    @PostMapping("/status")
+    @Operation(summary = "获取所有设备在线状态")
+    @RequiresPermissions("sys:role:normal")
+    public Result<String> getAllDevicesStatus() {
         try {
             // 从系统参数中获取MQTT网关地址
             String mqttGatewayUrl = sysParamsService.getValue("server.mqtt_manager_api", true);
@@ -105,7 +114,7 @@ public class DeviceController {
 
             // 获取当前用户的设备列表
             UserDetail user = SecurityUser.getUser();
-            List<DeviceEntity> devices = deviceService.getUserDevices(user.getId(), agentId);
+            List<DeviceEntity> devices = deviceService.getUserDevices(user.getId());
 
             // 构建deviceIds数组
             java.util.List<String> deviceIds = new java.util.ArrayList<>();
@@ -195,7 +204,16 @@ public class DeviceController {
         if (!entity.getUserId().equals(user.getId())) {
             return new Result<Void>().error("设备不存在");
         }
-        BeanUtils.copyProperties(deviceUpdateDTO, entity);
+        if (deviceUpdateDTO.getAlias() != null) {
+            entity.setAlias(deviceUpdateDTO.getAlias());
+        }
+        if (deviceUpdateDTO.getAutoUpdate() != null) {
+            entity.setAutoUpdate(deviceUpdateDTO.getAutoUpdate());
+        }
+        if (deviceUpdateDTO.getMemoryId() != null) {
+            entity.setMemoryId(deviceUpdateDTO.getMemoryId());
+        }
+        // BeanUtils.copyProperties(deviceUpdateDTO, entity);
         deviceService.updateById(entity);
         return new Result<Void>();
     }

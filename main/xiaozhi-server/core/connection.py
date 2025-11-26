@@ -149,6 +149,7 @@ class ConnectionHandler:
         self.close_after_chat = False
         self.load_function_plugin = False
         self.intent_type = "nointent"
+        self.memory_id = None
 
         self.timeout_seconds = (
             int(self.config.get("close_connection_no_voice_time", 120)) + 60
@@ -620,6 +621,8 @@ class ConnectionHandler:
             self.chat_history_conf = int(private_config["chat_history_conf"])
         if private_config.get("mcp_endpoint", None) is not None:
             self.config["mcp_endpoint"] = private_config["mcp_endpoint"]
+        if private_config.get("memory_id", None) is not None:
+            self.memory_id = private_config["memory_id"]
         try:
             modules = initialize_modules(
                 self.logger,
@@ -651,8 +654,9 @@ class ConnectionHandler:
         if self.memory is None:
             return
         """初始化记忆模块"""
+        role_id = self.memory_id if self.memory_id else self.device_id
         self.memory.init_memory(
-            role_id=self.device_id,
+            role_id=role_id,
             llm=self.llm,
             summary_memory=self.config.get("summaryMemory", None),
             save_to_file=not self.read_config_from_api,
