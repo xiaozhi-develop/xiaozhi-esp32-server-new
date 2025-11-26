@@ -45,7 +45,7 @@
       "des": "使用SSE传输模式（默认）"
     },
     "streamable-http-mcp-server": {
-      "url": "http://localhost:8000/mcp",
+      "url": "http://localhost:9200/mcp",
       "transport": "streamable-http",
       "headers": {
         "Authorization": "Bearer YOUR TOKEN"
